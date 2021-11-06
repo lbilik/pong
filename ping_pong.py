@@ -4,7 +4,7 @@ pygame.init()
 
 #Koment
 #123
-mw_w = 500
+mw_w = 700
 mw_h = 500
 
 mw = pygame.display.set_mode((mw_w, mw_h))
@@ -60,15 +60,34 @@ class Ball(Sprite):
         elif self.rect.y < 0:
             self.Speed_y = random.uniform(3.0, 5.5)
 
-rct_l = Rockets('rc.png', 5, 0, 16, 106)
-rct_r = Rockets('rc.png', mw_w - 20, 0, 16, 106)
+rct_l = Rockets('rc.png', 55, 0, 16, 106)
+rct_r = Rockets('rc.png', mw_w - 75, 0, 16, 106)
 ball = Ball('ball.png', random.randint(50,mw_w-50), random.randint(80,mw_w-80),26,26, random.choice([-3,3]))
 ball.inst_speed()
+
+class Count():
+    def __init__(self, x, y, score, size):
+        self.rect = pygame.Rect(x, y, 10, 10)
+        self.score = score
+        self.size = size
+        
+    def draw(self):
+        self.image = pygame.font.SysFont('verdana', self.size).render(str(self.score), True, (0,0,0))
+        mw.blit(self.image,(self.rect.x,self.rect.y))
+
+count_r = Count(mw_w-38,mw_h/2,0,20)
+count_r.draw()
+
+count_l =Count(20,mw_h/2,0,20)
+count_l.draw()
+
+    
 
 def ping_pong():
     if pygame.sprite.collide_rect(rct_l, ball):
         ball.Speed_x = random.uniform(3, 5)
         ball.Speed_y = random.uniform(-4, 4)
+        count_l.score += 1
         '''
         if random.random() > 0.5:
             ball.Speed_y *= -1
@@ -78,6 +97,9 @@ def ping_pong():
     if pygame.sprite.collide_rect(rct_r, ball):
         ball.Speed_x = -random.uniform(3, 5)
         ball.Speed_y = random.uniform(-4, 4)
+        count_r.score += 1
+
+
         '''
         if random.random() > 0.5:
             ball.Speed_y *= -1
@@ -105,6 +127,8 @@ while game:
     rct_l.reset()
     rct_r.reset()
     ball.reset()
+    count_r.draw()
+    count_l.draw()
 
     pygame.display.update()
     clock.tick(FPS)
